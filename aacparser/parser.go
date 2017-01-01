@@ -1,10 +1,11 @@
 package aacparser
 
 import (
-	"github.com/deepch/old_bits"
-	"fmt"
 	"bytes"
+	"fmt"
 	"io"
+
+	bits "github.com/deepch/old_bits"
 )
 
 // copied from libavcodec/mpeg4audio.h
@@ -311,4 +312,3 @@ func ParseCodecData(config []byte) (info CodecInfo, err error) {
 	info.MPEG4AudioConfig = info.MPEG4AudioConfig.Complete()
 	return
 }
-
