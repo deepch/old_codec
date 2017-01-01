@@ -19,7 +19,6 @@ import (
 			h->f = av_frame_alloc();
 			h->ctx->extradata = data;
 			h->ctx->extradata_size = len;
-			h->ctx->debug = 0x3;
 			return avcodec_open2(h->ctx, h->c, 0);
 		}
 
