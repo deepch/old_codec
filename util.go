@@ -22,7 +22,7 @@ import (
 	"unsafe"
 
 	/*
-		#cgo LDFLAGS: -lavformat -lavutil -lavcodec
+		#cgo LDFLAGS: -Wdeprecated-declarations -lavformat -lavutil -lavcodec
 
 		#include <libavutil/avutil.h>
 		#include <libavformat/avformat.h>
