@@ -1,11 +1,11 @@
-
 package h264parser
 
 import (
-	"github.com/deepch/old_bits"
-	"io"
-	"fmt"
 	"bytes"
+	"fmt"
+	"io"
+
+	"github.com/deepch/old_bits"
 )
 
 /*
@@ -118,7 +118,7 @@ Annex B is commonly used in live and streaming formats such as transport streams
 2. AVCC
 The other common method of storing an H.264 stream is the AVCC format. In this format, each NALU is preceded with its length (in big endian format). This method is easier to parse, but you lose the byte alignment features of Annex B. Just to complicate things, the length may be encoded using 1, 2 or 4 bytes. This value is stored in a header object. This header is often called ‘extradata’ or ‘sequence header’. Its basic format is as follows:
 
-bits    
+bits
 8   version ( always 0x01 )
 8   avc profile ( sps[0][1] )
 8   avc compatibility ( sps[0][2] )
@@ -187,11 +187,11 @@ An advantage to this format is the ability to configure the decoder at the start
 */
 
 func WalkNALUsAnnexb(nalus [][]byte, write func([]byte)) {
-	for i, nalu := range(nalus) {
+	for i, nalu := range nalus {
 		if i == 0 {
-			write([]byte{0,0,0,1,0x9,0xf0,0,0,0,1}) // AUD
+			write([]byte{0, 0, 0, 1, 0x9, 0xf0, 0, 0, 0, 1}) // AUD
 		} else {
-			write([]byte{0,0,1})
+			write([]byte{0, 0, 1})
 		}
 		write(nalu)
 	}
@@ -199,7 +199,7 @@ func WalkNALUsAnnexb(nalus [][]byte, write func([]byte)) {
 }
 
 func WalkNALUsAVCC(nalus [][]byte, write func([]byte)) {
-	for _, nalu := range(nalus) {
+	for _, nalu := range nalus {
 		var b [4]byte
 		bits.PutUIntBE(b[:], uint(len(nalu)), 32)
 		write(b[:])
@@ -556,7 +556,7 @@ func WriteAVCDecoderConfRecord(w io.Writer, self AVCDecoderConfRecord) (err erro
 }
 
 type CodecInfo struct {
-	Record AVCDecoderConfRecord
+	Record  AVCDecoderConfRecord
 	SPSInfo SPSInfo
 }
 
@@ -630,7 +630,7 @@ func ParseAVCDecoderConfRecord(config []byte) (self AVCDecoderConfRecord, err er
 	if u, err = bits.ReadUIntBE(r, 8); err != nil {
 		return
 	}
-	n = int(u&0x1f)
+	n = int(u & 0x1f)
 	for i := 0; i < n; i++ {
 		if u, err = bits.ReadUIntBE(r, 16); err != nil {
 			return
@@ -675,7 +675,7 @@ func (self SliceType) String() string {
 }
 
 const (
-	P = iota+1
+	P = iota + 1
 	B
 	I
 )
@@ -687,9 +687,9 @@ func ParseSliceHeaderFromNALU(packet []byte) (sliceType SliceType, err error) {
 		return
 	}
 
-	nal_unit_type := packet[0]&0x1f
+	nal_unit_type := packet[0] & 0x1f
 	switch nal_unit_type {
-	case 1,2,5,19:
+	case 1, 2, 5, 19:
 		// slice_layer_without_partitioning_rbsp
 		// slice_data_partition_a_layer_rbsp
 
@@ -712,11 +712,11 @@ func ParseSliceHeaderFromNALU(packet []byte) (sliceType SliceType, err error) {
 	}
 
 	switch u {
-	case 0,3,5,8:
+	case 0, 3, 5, 8:
 		sliceType = P
-	case 1,6:
+	case 1, 6:
 		sliceType = B
-	case 2,4,7,9:
+	case 2, 4, 7, 9:
 		sliceType = I
 	default:
 		err = fmt.Errorf("slice_type=%d invalid", u)
@@ -725,4 +725,3 @@ func ParseSliceHeaderFromNALU(packet []byte) (sliceType SliceType, err error) {
 
 	return
 }
-
