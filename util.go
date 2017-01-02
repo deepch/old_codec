@@ -29,7 +29,7 @@ import (
 
 		static void libav_init() {
 			av_register_all();
-			//av_log_set_level(AV_LOG_DEBUG);
+			av_log_set_level(AV_LOG_FATAL);
 		}
 	*/
 	"C"
