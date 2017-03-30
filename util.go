@@ -22,7 +22,7 @@ import (
 	"unsafe"
 
 	/*
-		#cgo LDFLAGS: -Wdeprecated-declarations -lavformat -lavutil -lavcodec
+		#cgo LDFLAGS: -Wdeprecated-declarations -lavformat -lavutil -lavcodec -Wdeprecated-declarations
 
 		#include <libavutil/avutil.h>
 		#include <libavformat/avformat.h>
@@ -34,9 +34,14 @@ import (
 	*/
 	"C"
 )
+import "log"
 
 func init() {
 	C.libav_init()
+	log.Println("avutil_version", uint(C.avutil_version()))
+	log.Println("avformat_version", uint(C.avformat_version()))
+	log.Println("avcodec_version", uint(C.avcodec_version()))
+
 }
 
 func fromCPtr(buf unsafe.Pointer, size int) (ret []uint8) {
